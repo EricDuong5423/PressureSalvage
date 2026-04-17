@@ -150,8 +150,8 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 2
   m_Range: 10
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_SpotAngle: 48.517258
+  m_InnerSpotAngle: 40.31932
   m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 2
@@ -187,9 +187,9 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 18.08, y: 24.69}
   m_BounceIntensity: 1
   m_ColorTemperature: 5000
   m_UseColorTemperature: 1
@@ -307,7 +307,7 @@ GameObject:
   - component: {fileID: 1135688077}
   - component: {fileID: 1135688076}
   - component: {fileID: 1135688075}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -360,7 +360,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 16ca5feb16ef2d744852096378401523, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -538,8 +538,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMotor
   speed: 5
+  walkSpeed: 3
   gravity: -9.8
   jumpHeight: 0.5
+  sprintSpeed: 5
 --- !u!114 &1285941333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,6 +554,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b750ba0835a9dfe4eb492b7f54130ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputManager
+--- !u!114 &1285941338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285941331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52cc8acc518b8724b94225854c6a7168, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLook
+  cam: {fileID: 1685130908}
+  xSensitivity: 30
+  ySensitivity: 30
+--- !u!114 &1285941339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285941331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cfbfe6ae868d440e9364693411de156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
+  distance: 3
+  mask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1001 &1620917624
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -600,6 +633,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 572617754110402786, guid: fdcc2ea0b4a59d44ebb86899c1f72c78, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.22
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fdcc2ea0b4a59d44ebb86899c1f72c78, type: 3}
       propertyPath: m_Name
       value: Astrounalts
@@ -613,6 +650,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fdcc2ea0b4a59d44ebb86899c1f72c78, type: 3}
+--- !u!20 &1685130908 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2615637584352837357, guid: 30434387906a707409b8cef5df4c1a0a, type: 3}
+  m_PrefabInstance: {fileID: 3983385226954906699}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2121390341
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,7 +667,8 @@ GameObject:
   - component: {fileID: 2121390344}
   - component: {fileID: 2121390343}
   - component: {fileID: 2121390342}
-  m_Layer: 0
+  - component: {fileID: 2121390346}
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -678,7 +721,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 16ca5feb16ef2d744852096378401523, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -725,6 +768,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2121390346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2121390341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a0dd1c0bb6af46c4ad8a9a5ea4ba0f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChangeShader
 --- !u!1001 &3983385226954906699
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -787,6 +842,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 259885275406541120, guid: 30434387906a707409b8cef5df4c1a0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1285941332}
+    - targetCorrespondingSourceObject: {fileID: 259885275406541120, guid: 30434387906a707409b8cef5df4c1a0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1285941338}
+    - targetCorrespondingSourceObject: {fileID: 259885275406541120, guid: 30434387906a707409b8cef5df4c1a0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1285941339}
   m_SourcePrefab: {fileID: 100100000, guid: 30434387906a707409b8cef5df4c1a0a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

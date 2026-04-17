@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
@@ -7,6 +8,11 @@ public class PlayerLook : MonoBehaviour
     
     public float xSensitivity = 30f;
     public float ySensitivity = 30f;
+
+    private void Start()
+    {
+        cam = GetComponentInChildren<Camera>();
+    }
 
     public void ProcessLook(Vector2 input)
     {
