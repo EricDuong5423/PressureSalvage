@@ -42,6 +42,11 @@ public class PlayerInteract : MonoBehaviour
     private void Drop(InputAction.CallbackContext obj)
     {
         if (currentCarried == null) return;
+        
+        MonoBehaviour item = currentCarried as  MonoBehaviour;
+        if (item != null)
+            item.transform.position = transform.position + transform.forward * 1.2f + Vector3.up * 0.3f;
+        
         currentCarried.Drop();
         currentCarried = null;
     }
@@ -54,53 +59,76 @@ public class PlayerInteract : MonoBehaviour
         if (hitInfo.collider.TryGetComponent<Interactable>(out Interactable interactable)) 
             interactable.BaseInteract();
 
-        if (hitInfo.collider.TryGetComponent<ICarryable>(out ICarryable carryable))
+        if (hitInfo.collider.TryGetComponent<ICarryable>(out ICarryable carryable) && currentCarried == null)
         {
             Transform parent = carryable.IsTwoHandRequired ?  twoHandCarryParent : carryParent;
             carryable.Carry(parent);
             currentCarried = carryable;
         }
     }
+
+    private void ClearOutline()
+    {
+        if (lastRenderer != null)
+        {
+            TurnOffOutline(lastRenderer);
+            lastRenderer = null;
+        }
+    }
+
+    private void HandleOutline(MeshRenderer currentRenderer, bool targetIsCarryable)
+    {
+        bool handFull = currentCarried != null && (currentCarried.IsTwoHandRequired || targetIsCarryable);
+        if (handFull)
+        {
+            ClearOutline();
+            return;
+        }
+        if (currentRenderer == lastRenderer) return;
+        ClearOutline();
+        if (currentRenderer != null)
+        {
+            SetOutline(currentRenderer, 1.05f);
+            lastRenderer = currentRenderer;
+        }
+    }
+    
+    private void HandleInteractionUI(Collider hitCollider)
+    {
+        if (!hitCollider.TryGetComponent<Interactable>(out Interactable interactable))
+        {
+            playerUI.UpdateText(string.Empty);
+            return;
+        }
+        string text = interactable.promptMessage;
+        hitCollider.TryGetComponent<ICarryable>(out ICarryable carryable);
+        bool twoHandRequired = carryable != null ? carryable.IsTwoHandRequired : false;
+
+        if (currentCarried != null && (currentCarried.IsTwoHandRequired || twoHandRequired || carryable != null))
+        {
+            text = "Hand full";
+        }
+        playerUI.UpdateText(text);
+    }
     
     void Update()
     {
-        playerUI.UpdateText(string.Empty);
         //Create a ray with the origin from the camera's position with direction where the camera is facing
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
-        
-        if (Physics.Raycast(ray, out hitInfo, distance, mask))
-        {
-            //For outline
-            MeshRenderer currentRenderer = hitInfo.collider.gameObject.GetComponent<MeshRenderer>();
 
-            if (lastRenderer != currentRenderer && currentCarried == null)
-            {
-                if (lastRenderer != null)
-                {
-                    TurnOffOutline(lastRenderer);
-                }
-                if (currentRenderer != null)
-                {
-                    SetOutline(currentRenderer, 1.05f);
-                }
-                lastRenderer = currentRenderer;
-            }
-            
-            if (hitInfo.collider.TryGetComponent<Interactable>(out Interactable interactable))
-            {
-                string text = currentCarried != null ? "Hand full" : interactable.promptMessage;
-                playerUI.UpdateText(text);
-            }
-        }
-        else
+        if (!Physics.Raycast(ray, out hitInfo, distance, mask))
         {
-            if (lastRenderer != null)
-            {
-                TurnOffOutline(lastRenderer);
-                lastRenderer = null;
-            }
+            ClearOutline();
+            playerUI.UpdateText(string.Empty);
+            return;
         }
+        
+        MeshRenderer currentRenderer = hitInfo.collider.GetComponent<MeshRenderer>();
+        bool targetIsCarryable = hitInfo.collider.TryGetComponent<ICarryable>(out ICarryable carryable);
+        HandleOutline(currentRenderer, targetIsCarryable);
+        
+        HandleInteractionUI(hitInfo.collider);
     }
 
     private void SetOutline(MeshRenderer renderer, float value)

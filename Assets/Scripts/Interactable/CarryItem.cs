@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class CarryItem : Interactable, ICarryable
 {
     protected Rigidbody rb;
-    private Collider collider;
+    private Collider col;
     public abstract bool IsTwoHandRequired { get; }
 
     private Transform cameraTransform;
@@ -13,12 +13,12 @@ public abstract class CarryItem : Interactable, ICarryable
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<Collider>();
+        col = GetComponent<Collider>();
     }
     
     public virtual void Carry(Transform camera)
     {
-        collider.enabled = false;
+        col.enabled = false;
         cameraTransform = camera;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -27,9 +27,11 @@ public abstract class CarryItem : Interactable, ICarryable
 
     public virtual void Drop()
     {
-        collider.enabled = true;
         cameraTransform = null;
         rb.isKinematic = false;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        col.enabled = true;
     }
 
     protected override void Interact()

@@ -49,12 +49,15 @@ Input actions (all in the **OnFoot** map):
 Concrete subclasses:
 - `EventOnlyInteractable` — no code logic, fully driven by UnityEvents
 - `PickupItem` — logs pickup and destroys the object
-- `OneHandCarryItem` — parents object to the player's carry point, toggles `Rigidbody.isKinematic`
-- `TwoHandCarryItem` — stub placeholder
+- `CarryItem` — abstract base for carriable objects; implements `ICarryable`, disables collider and smoothly lerps position/rotation toward the carry `Transform` each frame via `Rigidbody.isKinematic`
+- `OneHandCarryItem` — `CarryItem` subclass where `IsTwoHandRequired = false`; parented to `carryParent` on the player
+- `TwoHandCarryItem` — `CarryItem` subclass where `IsTwoHandRequired = true`; parented to `twoHandCarryParent`; blocks picking up a second item
+
+`PlayerInteract` tracks one `ICarryable currentCarried`. Two-hand items block all further interaction while held. Dropping (Q) calls `ICarryable.Drop()` and clears the reference.
 
 ### Outline / Highlight Effect
 
-`PlayerInteract` manipulates a `_Scale` property on the hovered object's material to drive an outline shader effect (scale 1.05 when hovered, 1.0 when not). The shaders live in `Assets/Shaders/`.
+`PlayerInteract` uses a `MaterialPropertyBlock` to set `_Scale` on material slot index 1 of the hovered object's `MeshRenderer` (1.05 when hovered, 0 when not). The shaders live in `Assets/Shaders/`.
 
 ### Key Packages
 
@@ -62,3 +65,13 @@ Concrete subclasses:
 - `com.unity.render-pipelines.universal` — URP
 - `com.unity.ai.navigation` — NavMesh (not yet wired to scripts)
 - TextMesh Pro — UI text
+
+## Roadmap
+
+- [ ] **Phase 1** — Oxygen System (`OxygenSystem.cs`, `PanicEffect.cs`, `PlayerDeath.cs`; sửa `PlayerMotor`, `PlayerInteract`, `PlayerUI`)
+- [ ] **Phase 2** — Item Data System (`ItemData` ScriptableObject, weight tích hợp vào `CarryItem`)
+- [ ] **Phase 3** — HUD & Visual Feedback (oxygen gauge, panic post-processing, heartbeat SFX)
+- [ ] **Phase 4** — Monsters: San Hô Ký Sinh → Hermit-Bot → Siren-Diver → Cá Mập Xương → Leviathan / Đèn Lồng / Rùa / Con Hàu Đỏ
+- [ ] **Phase 5** — Economy & Quota System (`QuotaManager`, `SellPoint`, merchant interactables)
+- [ ] **Phase 6** — Zone & Level Design (3 vùng độ sâu, `DepthManager`, water surface + underwater post-processing)
+- [ ] **Phase 7** — Co-op Multiplayer (Unity Netcode for GameObjects)
