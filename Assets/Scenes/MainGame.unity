@@ -1080,6 +1080,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TwoHandCarryItem
   promptMessage: Carry
   useEvents: 1
+  data: {fileID: 0}
   followSpeed: 5
 --- !u!54 &1215017224
 Rigidbody:
@@ -1210,6 +1211,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
   promptText: {fileID: 652837044}
+--- !u!114 &1285941346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285941331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740f4d85c85374533ae755d5a56820df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OxygenSystem
+  maxOxygen: 100
+  baseDrainRate: 1
+  sprintDrainBonus: 1.5
+  weightDrainPerKg: 0.3
+  panicThreshHold: 0.2
+  panicMultiplier: 1.5
+  OnOxygenChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOxygenDepleted:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1500253808
 GameObject:
   m_ObjectHideFlags: 0
@@ -1549,6 +1574,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OneHandCarryItem
   promptMessage: Carry
   useEvents: 1
+  data: {fileID: 11400000, guid: ef38f4dd49bc749a1b7f59c60a4ae24f, type: 2}
   followSpeed: 5
 --- !u!114 &1846601845
 MonoBehaviour:
@@ -1874,6 +1900,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 259885275406541120, guid: 30434387906a707409b8cef5df4c1a0a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1285941344}
+    - targetCorrespondingSourceObject: {fileID: 259885275406541120, guid: 30434387906a707409b8cef5df4c1a0a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1285941346}
   m_SourcePrefab: {fileID: 100100000, guid: 30434387906a707409b8cef5df4c1a0a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
