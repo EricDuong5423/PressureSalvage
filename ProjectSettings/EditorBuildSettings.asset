@@ -5,9 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Boostrap.unity
+    guid: f6e2b19193f093849bfc3a102f86a73c
+  - enabled: 1
+    path: Assets/Scenes/UnderWater.unity
+    guid: 18246f70764f30149b086e75011fc2ea
+  - enabled: 1
+    path: Assets/Scenes/Submarine.unity
+    guid: 193a9bfb650b5da47b7371afd845a606
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 99f9c9493070a9d4c979a8fec7c5a8d3, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: b900f41fed88f584c95a530935d63efb, type: 3}

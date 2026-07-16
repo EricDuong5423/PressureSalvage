@@ -2,12 +2,16 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(
+    typeof(PlayerMotor),
+    typeof(PlayerLook))]
 public class InputManager : MonoBehaviour
 {
     
     private PlayerInput playerInput;
     private PlayerInput.OnFootActions onFoot;
     public PlayerInput.OnFootActions OnFoot => onFoot;
+    public bool ControlEnabled = true;
 
     private PlayerLook look;
     private PlayerMotor motor;
@@ -34,15 +38,19 @@ public class InputManager : MonoBehaviour
     {
         onFoot.Disable();   
     }
-
-    // Update is called once per frame
-    void FixedUpdate()
+    
+    private void Update()
     {
-        motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>());
+        if (!ControlEnabled || motor == null)
+            return;
+
+        motor.ProcessMove(
+            onFoot.Movement.ReadValue<Vector2>());
     }
 
     private void LateUpdate()
     {
+        if (!ControlEnabled) return;
         look.ProcessLook(onFoot.Look.ReadValue<Vector2>());
     }
 }

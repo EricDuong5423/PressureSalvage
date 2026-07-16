@@ -15,36 +15,42 @@ public class PlayerMotor : MonoBehaviour
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
     public float sprintSpeed = 5f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    
+    private Vector3 horizontalVelocity;
+    void Awake()
     {
         controller = GetComponent<CharacterController>();
     }
 
     public void ProcessMove(Vector2 input)
     {
-        Vector3 moveDirection = Vector3.zero;
-        moveDirection.x = input.x;
-        moveDirection.z = input.y;
-        controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
-        playerVelocity.y += gravity * Time.deltaTime;
-        if(isGrounded && playerVelocity.y < 0) playerVelocity.y = -2f;
+        var s = UnderwaterEnvironment.Instance?.Settings;
+        float accel  = s ? s.acceleration : 3f;
+        float g      = s ? s.gravity : gravity;
+        float walk   = s ? s.walkSpeed : walkSpeed;
+        float sprint = s ? s.sprintSpeed : sprintSpeed;
+        float curSpeed = isSprinting ? sprint : walk;
+
+        Vector3 dir = transform.TransformDirection(new Vector3(input.x, 0, input.y));
+        horizontalVelocity = Vector3.Lerp(horizontalVelocity, dir * curSpeed, accel * Time.deltaTime);
+        controller.Move(horizontalVelocity * Time.deltaTime);
+
+        playerVelocity.y += g * Time.deltaTime;
+        if (isGrounded && playerVelocity.y < 0) playerVelocity.y = -2f;
         controller.Move(playerVelocity * Time.deltaTime);
     }
 
     public void Jump()
     {
-        if (isGrounded)
-        {
-            playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
-        }
+        if (!isGrounded) return;
+        var s = UnderwaterEnvironment.Instance?.Settings;
+        float g = s ? s.gravity : gravity;
+        playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * g);
     }
 
     public void Sprint(bool sprinting)
     {
         isSprinting = sprinting;
-        if (isSprinting) speed = sprintSpeed;
-        else speed = walkSpeed;
     }
 
     // Update is called once per frame

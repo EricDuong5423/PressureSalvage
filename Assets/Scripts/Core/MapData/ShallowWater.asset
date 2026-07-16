@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6db94b818231b40a5cdd6e17c03b3d, type: 3}
+  m_Name: ShallowWater
+  m_EditorClassIdentifier: Assembly-CSharp::MapData
+  Id: 1
+  DisplayName: SHALLOW
+  SceneName: UnderWater
+  ReviewImage: {fileID: 0}
+  mapPosition: {x: -430, y: 10}
+  Description: 
+  LootProfile: {fileID: 11400000, guid: 6c690ac285f1361498e87b4051b1d269, type: 2}
+  UnlockedByDefault: 1
+  RequiredDay: 0
+  UnlockCost: 0
+  LockHint: Default map.

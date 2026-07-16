@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,150 +8,315 @@ public class PlayerInteract : MonoBehaviour
     //For raycast
     private Camera cam;
     [Header("Raycast")]
-    [SerializeField]
-    private float distance = 3f;
-    [SerializeField]
-    private LayerMask mask;
+    [SerializeField] private float distance = 3f;
+    [SerializeField] private LayerMask mask;
+    [Header("Target Feedback")]
+    [SerializeField] private Material hologramMaterial;
+    [SerializeField] private WorldItemTooltip worldItemTooltip;
     private MeshRenderer lastRenderer;
+    
+    private readonly Dictionary<Renderer, Material[]>
+        originalMaterials = new();
     
     //For UI
     private PlayerUI playerUI;
-    
     //For handle the input
     private InputManager inputManager;
+    private PlayerHotbar hotbar;
     private RaycastHit hitInfo;
-
-    //For carrying object
-    [Header("Carry item")]
-    [SerializeField] 
-    private Transform carryParent;
-    [SerializeField]
-    private Transform twoHandCarryParent;
-    private ICarryable currentCarried;
+    private Interactable currentTarget;
 
     private MaterialPropertyBlock propBlock;
+    
+    private bool initialized;
+    private bool inputSubscribed;
 
-    public float CarriedWeightKg
+    public float CarriedWeightKg => Inventory.Instance != null ? Inventory.Instance.TotalWeight : 0f;
+    private void Start()
     {
-        get
-        {
-            if (currentCarried == null) return 0f;
-            CarryItem item = currentCarried as CarryItem;
-            return (item != null && item.data != null) ? item.data.weightKg : 0f; 
-        }
-    }
-    void Start()
-    {
-        cam = GetComponent<PlayerLook>().cam;
-        playerUI = GetComponent<PlayerUI>();
         inputManager = GetComponent<InputManager>();
-        propBlock = new MaterialPropertyBlock();
-        
-        inputManager.OnFoot.Interact.performed += Interact;
-        inputManager.OnFoot.Drop.performed += Drop;
-    }
+        hotbar = GetComponent<PlayerHotbar>();
 
-    private void Drop(InputAction.CallbackContext obj)
-    {
-        if (currentCarried == null) return;
-        
-        MonoBehaviour item = currentCarried as  MonoBehaviour;
-        if (item != null)
-            item.transform.position = transform.position + transform.forward * 1.2f + Vector3.up * 0.3f;
-        
-        currentCarried.Drop();
-        currentCarried = null;
-    }
+        PlayerLook playerLook =
+            GetComponent<PlayerLook>();
 
-    private void Interact(InputAction.CallbackContext obj)
-    {
-        if (currentCarried != null && currentCarried.IsTwoHandRequired) return;
-        if (hitInfo.collider == null) return;
+        cam = playerLook != null
+            ? playerLook.cam
+            : null;
 
-        if (hitInfo.collider.TryGetComponent<Interactable>(out Interactable interactable)) 
-            interactable.BaseInteract();
+        if (cam == null)
+            cam = GetComponentInChildren<Camera>(true);
 
-        if (hitInfo.collider.TryGetComponent<ICarryable>(out ICarryable carryable) && currentCarried == null)
+        playerUI = PlayerUI.Instance;
+
+        if (playerUI == null)
+            playerUI = FindAnyObjectByType<PlayerUI>();
+
+        if (worldItemTooltip == null)
         {
-            Transform parent = carryable.IsTwoHandRequired ?  twoHandCarryParent : carryParent;
-            carryable.Carry(parent);
-            currentCarried = carryable;
+            worldItemTooltip =
+                GetComponentInChildren<WorldItemTooltip>(true);
         }
-    }
 
-    private void ClearOutline()
-    {
-        if (lastRenderer != null)
+        if (cam == null)
         {
-            TurnOffOutline(lastRenderer);
-            lastRenderer = null;
+            Debug.LogError(
+                "PlayerInteract không tìm thấy camera.",
+                this);
         }
+
+        if (worldItemTooltip == null)
+        {
+            Debug.LogError(
+                "PlayerInteract chưa được gán WorldItemTooltip.",
+                this);
+        }
+
+        initialized = true;
+        SubscribeInput();
     }
 
-    private void HandleOutline(MeshRenderer currentRenderer, bool targetIsCarryable)
+    private void OnEnable()
     {
-        bool handFull = currentCarried != null && (currentCarried.IsTwoHandRequired || targetIsCarryable);
-        if (handFull)
+        if (initialized)
+            SubscribeInput();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeInput();
+        ClearCurrentTarget();
+        ClearPrompt();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeInput();
+        RestoreOriginalMaterials();
+    }
+
+    private void Update()
+    {
+        if (cam == null)
+            return;
+
+        Ray ray = new Ray(
+            cam.transform.position,
+            cam.transform.forward);
+
+        if (!Physics.Raycast(
+                ray,
+                out hitInfo,
+                distance,
+                mask))
         {
-            ClearOutline();
+            hitInfo = default;
+            SetCurrentTarget(null);
+            ClearPrompt();
             return;
         }
-        if (currentRenderer == lastRenderer) return;
-        ClearOutline();
-        if (currentRenderer != null)
+
+        Interactable target =
+            hitInfo.collider
+                .GetComponentInParent<Interactable>();
+
+        SetCurrentTarget(target);
+        UpdateInteractionUI(target);
+    }
+
+    private void SetCurrentTarget(Interactable newTarget)
+    {
+        if (newTarget == currentTarget)
+            return;
+
+        ClearCurrentTarget();
+
+        currentTarget = newTarget;
+
+        if (currentTarget == null)
+            return;
+
+        ApplyHologram(currentTarget);
+
+        if (currentTarget is CarryItem item &&
+            item.data != null &&
+            worldItemTooltip != null)
         {
-            SetOutline(currentRenderer, 1.05f);
-            lastRenderer = currentRenderer;
+            worldItemTooltip.Show(
+                item,
+                cam);
         }
     }
-    
-    private void HandleInteractionUI(Collider hitCollider)
+
+    private void ClearCurrentTarget()
     {
-        if (!hitCollider.TryGetComponent<Interactable>(out Interactable interactable))
+        RestoreOriginalMaterials();
+
+        if (worldItemTooltip != null)
+            worldItemTooltip.Hide();
+
+        currentTarget = null;
+    }
+
+    private void ApplyHologram(Interactable target)
+    {
+        if (target == null || hologramMaterial == null)
+            return;
+
+        Renderer[] renderers =
+            target.GetComponentsInChildren<Renderer>(true);
+
+        foreach (Renderer renderer in renderers)
         {
+            if (renderer is not MeshRenderer &&
+                renderer is not SkinnedMeshRenderer)
+            {
+                continue;
+            }
+
+            Material[] materials =
+                renderer.sharedMaterials;
+
+            if (materials == null || materials.Length == 0)
+                continue;
+            
+            originalMaterials[renderer] = materials;
+            Material[] hologramMaterials =
+                new Material[materials.Length];
+
+            for (int i = 0;
+                 i < hologramMaterials.Length;
+                 i++)
+            {
+                hologramMaterials[i] =
+                    hologramMaterial;
+            }
+
+            renderer.sharedMaterials =
+                hologramMaterials;
+        }
+    }
+
+    private void RestoreOriginalMaterials()
+    {
+        foreach (KeyValuePair<Renderer, Material[]> entry
+                 in originalMaterials)
+        {
+            Renderer renderer = entry.Key;
+
+            if (renderer != null)
+                renderer.sharedMaterials = entry.Value;
+        }
+
+        originalMaterials.Clear();
+    }
+
+    private void UpdateInteractionUI(
+        Interactable target)
+    {
+        if (target == null)
+        {
+            ClearPrompt();
+            return;
+        }
+
+        if (target is CarryItem item &&
+            item.data != null)
+        {
+            bool inventoryFull = IsInventoryFull();
+
+            if (playerUI != null)
+            {
+                playerUI.UpdateText(
+                    inventoryFull
+                        ? "Inventory full"
+                        : $"Pick up {item.data.itemName}");
+            }
+
+            return;
+        }
+
+        if (worldItemTooltip != null)
+            worldItemTooltip.Hide();
+
+        if (playerUI != null)
+            playerUI.UpdateText(target.promptMessage);
+    }
+
+    private bool IsInventoryFull()
+    {
+        return Inventory.Instance != null &&
+               Inventory.Instance.TryWouldBeFull();
+    }
+
+    private void Interact(
+        InputAction.CallbackContext context)
+    {
+        if (currentTarget == null)
+            return;
+
+        if (currentTarget is CarryItem item)
+        {
+            bool pickedUp =
+                hotbar != null &&
+                hotbar.TryPickup(item);
+
+            if (!pickedUp)
+            {
+                UpdateInteractionUI(currentTarget);
+                return;
+            }
+            ClearCurrentTarget();
+            ClearPrompt();
+            hitInfo = default;
+            return;
+        }
+
+        Interactable target = currentTarget;
+        ClearCurrentTarget();
+        ClearPrompt();
+        hitInfo = default;
+
+        target.BaseInteract();
+    }
+
+    private void Drop(
+        InputAction.CallbackContext context)
+    {
+        hotbar?.DropActive();
+    }
+
+    private void ClearPrompt()
+    {
+        if (playerUI != null)
             playerUI.UpdateText(string.Empty);
+    }
+
+    private void SubscribeInput()
+    {
+        if (inputSubscribed || inputManager == null)
             return;
-        }
-        string text = interactable.promptMessage;
-        hitCollider.TryGetComponent<ICarryable>(out ICarryable carryable);
-        bool twoHandRequired = carryable != null ? carryable.IsTwoHandRequired : false;
 
-        if (currentCarried != null && (currentCarried.IsTwoHandRequired || twoHandRequired || carryable != null))
-        {
-            text = "Hand full";
-        }
-        playerUI.UpdateText(text);
+        inputManager.OnFoot.Interact.performed +=
+            Interact;
+
+        inputManager.OnFoot.Drop.performed +=
+            Drop;
+
+        inputSubscribed = true;
     }
-    
-    void Update()
-    {
-        //Create a ray with the origin from the camera's position with direction where the camera is facing
-        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
 
-        if (!Physics.Raycast(ray, out hitInfo, distance, mask))
-        {
-            ClearOutline();
-            playerUI.UpdateText(string.Empty);
+    private void UnsubscribeInput()
+    {
+        if (!inputSubscribed || inputManager == null)
             return;
-        }
-        
-        MeshRenderer currentRenderer = hitInfo.collider.GetComponent<MeshRenderer>();
-        bool targetIsCarryable = hitInfo.collider.TryGetComponent<ICarryable>(out ICarryable carryable);
-        HandleOutline(currentRenderer, targetIsCarryable);
-        
-        HandleInteractionUI(hitInfo.collider);
-    }
 
-    private void SetOutline(MeshRenderer renderer, float value)
-    {
-        renderer.GetPropertyBlock(propBlock, 1);
-        propBlock.SetFloat("_Scale", value);
-        renderer.SetPropertyBlock(propBlock, 1);
-    }
+        inputManager.OnFoot.Interact.performed -=
+            Interact;
 
-    private void TurnOffOutline(MeshRenderer renderer)
-    {
-        SetOutline(renderer, 0f);
+        inputManager.OnFoot.Drop.performed -=
+            Drop;
+
+        inputSubscribed = false;
     }
 }

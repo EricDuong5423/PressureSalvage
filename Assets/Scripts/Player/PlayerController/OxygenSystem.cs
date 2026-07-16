@@ -10,6 +10,8 @@ public class OxygenSystem : MonoBehaviour
     [SerializeField] private float baseDrainRate = 1f;
     [SerializeField] private float sprintDrainBonus = 1.5f;
     [SerializeField] private float weightDrainPerKg = 0.3f;
+    [SerializeField] private float oxygenPerTier = 25f;
+    private float baseMaxOxygen;
 
     [Header("Panic")] 
     [SerializeField] private float panicThreshHold = 0.2f;
@@ -25,6 +27,8 @@ public class OxygenSystem : MonoBehaviour
 
     private PlayerMotor motor;
     private PlayerInteract interact;
+    
+    public float PanicThreshHoldRatio => panicThreshHold;
 
     private struct ActiveDebuff
     {
@@ -38,12 +42,21 @@ public class OxygenSystem : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         interact = GetComponent<PlayerInteract>();
         currentOxygen = maxOxygen;
+        baseMaxOxygen = maxOxygen;
         isDead = false;
+    }
+
+    public void ApplyTankTier(int tier)
+    {
+        maxOxygen = baseMaxOxygen + tier * oxygenPerTier;
+        currentOxygen = maxOxygen;
+        OnOxygenChanged?.Invoke(currentOxygen / maxOxygen * 100f);
     }
 
     private void Update()
     {
         if (isDead) return;
+        if (UnderwaterEnvironment.Instance == null) return;
         float drain = baseDrainRate;
 
         //When running
@@ -65,9 +78,6 @@ public class OxygenSystem : MonoBehaviour
             drain *=  panicMultiplier;
         
         currentOxygen = Mathf.Clamp(currentOxygen - drain * Time.deltaTime, 0f, maxOxygen);
-        
-        Debug.Log("Oxygen: " + currentOxygen);
-        Debug.Log("Drain: " + drain);
         
         float percent = currentOxygen / maxOxygen * 100f;
         OnOxygenChanged?.Invoke(percent);
@@ -95,5 +105,5 @@ public class OxygenSystem : MonoBehaviour
     }
 
     public float CurrentPercent => currentOxygen/maxOxygen * 100f;
-    public bool IsPanic => CurrentPercent <= panicThreshHold;
+    public bool IsPanic => currentOxygen / maxOxygen <= panicThreshHold;
 }

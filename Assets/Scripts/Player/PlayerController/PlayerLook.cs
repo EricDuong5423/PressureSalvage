@@ -9,7 +9,7 @@ public class PlayerLook : MonoBehaviour
     public float xSensitivity = 30f;
     public float ySensitivity = 30f;
 
-    private void Start()
+    private void Awake()
     {
         cam = GetComponentInChildren<Camera>();
     }
