@@ -18,15 +18,12 @@ public class CarryItem : Interactable
         cam = Camera.main;
     }
 
-    private void Start()
+    public void SpawningItem()
     {
-        if (rolled || data == null)
-            return;
-
-        Value = Random.Range(
-            data.minValue,
-            data.maxValue + 1);
-
+        if (rolled || data == null) return;
+        
+        Value = Random.Range(data.minValue, data.maxValue + 1);
+        
         rolled = true;
     }
 

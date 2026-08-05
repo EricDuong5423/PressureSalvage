@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class OxygenSystem : MonoBehaviour
 {
     [Header("Oxygen")]
-    [SerializeField] private float maxOxygen = 100f;
+    [SerializeField] private float maxOxygen = 500f;
     [SerializeField] private float baseDrainRate = 1f;
     [SerializeField] private float sprintDrainBonus = 1.5f;
     [SerializeField] private float weightDrainPerKg = 0.3f;
@@ -27,6 +27,8 @@ public class OxygenSystem : MonoBehaviour
 
     private PlayerMotor motor;
     private PlayerInteract interact;
+
+    private float drainRatio;
     
     public float PanicThreshHoldRatio => panicThreshHold;
 
@@ -56,18 +58,18 @@ public class OxygenSystem : MonoBehaviour
     private void Update()
     {
         if (isDead) return;
-        if (UnderwaterEnvironment.Instance == null) return;
-        float drain = baseDrainRate;
+        if (UnderwaterEnvironment.Instance.Settings.displayName == "SUBMARINE") return;
+        drainRatio = baseDrainRate;
 
         //When running
         if (motor.IsSprinting) 
-            drain += sprintDrainBonus;
+            drainRatio += sprintDrainBonus;
 
-        drain += interact.CarriedWeightKg * weightDrainPerKg;
+        drainRatio += interact.CarriedWeightKg * weightDrainPerKg;
         for (int i = activeDebuffs.Count - 1; i >= 0; i--)
         {
             var debuff = activeDebuffs[i];
-            drain += debuff.drainPerSec;
+            drainRatio += debuff.drainPerSec;
             debuff.elapsed += Time.deltaTime;
             if (debuff.elapsed >= debuff.duration) activeDebuffs.RemoveAt(i);
             else activeDebuffs[i] = debuff;
@@ -75,9 +77,9 @@ public class OxygenSystem : MonoBehaviour
         
         float ratio = currentOxygen / maxOxygen;
         if(ratio <= panicThreshHold) 
-            drain *=  panicMultiplier;
+            drainRatio *=  panicMultiplier;
         
-        currentOxygen = Mathf.Clamp(currentOxygen - drain * Time.deltaTime, 0f, maxOxygen);
+        currentOxygen = Mathf.Clamp(currentOxygen - drainRatio * Time.deltaTime, 0f, maxOxygen);
         
         float percent = currentOxygen / maxOxygen * 100f;
         OnOxygenChanged?.Invoke(percent);

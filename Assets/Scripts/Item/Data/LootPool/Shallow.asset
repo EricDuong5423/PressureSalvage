@@ -15,6 +15,24 @@ MonoBehaviour:
   items:
   - prefab: {fileID: 7437992070529640437, guid: 6202d46815315b846807b88e4f88420d, type: 3}
     weight: 1
+    minDay: 6
+  - prefab: {fileID: 4717655944880348812, guid: 74c9cce1b59cdf745a2b1867f22d7a52, type: 3}
+    weight: 90
     minDay: 1
+  - prefab: {fileID: 4991761847420468798, guid: aac67da5651d6f24a93826b5605d12f9, type: 3}
+    weight: 90
+    minDay: 1
+  - prefab: {fileID: 6818347903322185843, guid: 7aa876ed9dc52a04ca32ab1b56c4252b, type: 3}
+    weight: 75
+    minDay: 1
+  - prefab: {fileID: 9212551613207724495, guid: 4caa159acaa403f489bb76e282f8e82c, type: 3}
+    weight: 50
+    minDay: 3
+  - prefab: {fileID: 7865324225235678618, guid: cb090311f14d4fc4285a79c45baa015d, type: 3}
+    weight: 60
+    minDay: 2
+  - prefab: {fileID: 8924992914502353242, guid: 498767a649c06fc42a48e3475dd28138, type: 3}
+    weight: 2
+    minDay: 5
   baseCount: 6
   extraPerDay: 1

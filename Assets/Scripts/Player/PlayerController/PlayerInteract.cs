@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,12 +12,17 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField] private float distance = 3f;
     [SerializeField] private LayerMask mask;
     [Header("Target Feedback")]
-    [SerializeField] private Material hologramMaterial;
+    [SerializeField] private Material outlineMaterial;
     [SerializeField] private WorldItemTooltip worldItemTooltip;
-    private MeshRenderer lastRenderer;
+    [Header("Outline")]
+    [SerializeField] private float outlineColorIntensity = 4f;
+    [SerializeField] private float outlineScale = 1.15f;
     
     private readonly Dictionary<Renderer, Material[]>
         originalMaterials = new();
+    
+    private readonly Dictionary<Renderer, int>
+        outlineMaterialIndices = new();
     
     //For UI
     private PlayerUI playerUI;
@@ -25,11 +31,11 @@ public class PlayerInteract : MonoBehaviour
     private PlayerHotbar hotbar;
     private RaycastHit hitInfo;
     private Interactable currentTarget;
-
-    private MaterialPropertyBlock propBlock;
     
     private bool initialized;
     private bool inputSubscribed;
+    private static readonly int OutlineColorId = Shader.PropertyToID("_Color");
+    private static readonly int ScaleId = Shader.PropertyToID("_Scale");
 
     public float CarriedWeightKg => Inventory.Instance != null ? Inventory.Instance.TotalWeight : 0f;
     private void Start()
@@ -136,7 +142,7 @@ public class PlayerInteract : MonoBehaviour
         if (currentTarget == null)
             return;
 
-        ApplyHologram(currentTarget);
+        ApplyOutline(currentTarget);
 
         if (currentTarget is CarryItem item &&
             item.data != null &&
@@ -158,10 +164,45 @@ public class PlayerInteract : MonoBehaviour
         currentTarget = null;
     }
 
-    private void ApplyHologram(Interactable target)
+    private void ApplyOutline(Interactable target)
     {
-        if (target == null || hologramMaterial == null)
+        if (target == null || outlineMaterial == null)
             return;
+
+        Color outlineColor = Color.white;
+
+        if (target is CarryItem item)
+        {
+            switch (item.data.rank)
+            {
+                case ItemRank.F:
+                    outlineColor = new Color(0.7f, 0.75f, 0.75f);
+                    break;
+                case ItemRank.D:
+                    outlineColor = new Color(0.25f, 1f, 0.4f);
+                    break;
+                case ItemRank.C:
+                    outlineColor = new Color(0.15f, 0.75f, 1f);
+                    break;
+                case ItemRank.B:
+                    outlineColor = new Color(0.6f, 0.3f, 1f);
+                    break;
+                case ItemRank.A:
+                    outlineColor = new Color(1f, 0.55f, 0.1f);
+                    break;
+                case ItemRank.S:
+                    outlineColor = new Color(1f, 0.1f, 0.25f);
+                    break;
+                default:
+                    outlineColor = Color.white;
+                    break;
+            }
+        }
+
+        outlineColor = new Color(outlineColor.r * outlineColorIntensity,
+            outlineColor.g * outlineColorIntensity,
+            outlineColor.b * outlineColorIntensity,
+            outlineColor.a);
 
         Renderer[] renderers =
             target.GetComponentsInChildren<Renderer>(true);
@@ -174,26 +215,31 @@ public class PlayerInteract : MonoBehaviour
                 continue;
             }
 
-            Material[] materials =
-                renderer.sharedMaterials;
+            Material[] materials = renderer.sharedMaterials;
 
             if (materials == null || materials.Length == 0)
                 continue;
             
             originalMaterials[renderer] = materials;
-            Material[] hologramMaterials =
-                new Material[materials.Length];
+            
+            Material[] materialsWithOutline = new Material[materials.Length + 1];
+            
+            Array.Copy(materials, materialsWithOutline, materials.Length);
+            int outlineIndex = materialsWithOutline.Length - 1;
+            
+            materialsWithOutline[outlineIndex] = outlineMaterial;
+            
+            renderer.sharedMaterials = materialsWithOutline;
 
-            for (int i = 0;
-                 i < hologramMaterials.Length;
-                 i++)
-            {
-                hologramMaterials[i] =
-                    hologramMaterial;
-            }
-
-            renderer.sharedMaterials =
-                hologramMaterials;
+            MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock(); 
+            renderer.GetPropertyBlock(propertyBlock,  outlineIndex);
+            
+            propertyBlock.SetColor(OutlineColorId, outlineColor);
+            propertyBlock.SetFloat(ScaleId, outlineScale);
+            
+            renderer.SetPropertyBlock(propertyBlock, outlineIndex);
+            
+            outlineMaterialIndices[renderer] = outlineIndex;
         }
     }
 
@@ -204,11 +250,18 @@ public class PlayerInteract : MonoBehaviour
         {
             Renderer renderer = entry.Key;
 
-            if (renderer != null)
-                renderer.sharedMaterials = entry.Value;
-        }
+            if (renderer == null)
+                continue;
 
+            if (outlineMaterialIndices.TryGetValue(renderer, out int outlineIndex))
+            {
+                renderer.SetPropertyBlock(null, outlineIndex);
+            }
+
+            renderer.sharedMaterials = entry.Value;
+        }
         originalMaterials.Clear();
+        outlineMaterialIndices.Clear();
     }
 
     private void UpdateInteractionUI(

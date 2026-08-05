@@ -11,11 +11,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private PlayerSpawner playerSpawner;
 
     [Header("Oxygen UI")] 
-    [SerializeField] private Image oxygenFill;
-    
-    private static readonly Color ColorSafe   = new Color(0.02f, 0.72f, 0.85f);
-    private static readonly Color ColorWarn   = new Color(0.92f, 0.60f, 0.00f);
-    private static readonly Color ColorDanger = new Color(0.88f, 0.11f, 0.28f);
+    [SerializeField] private LiquidBar oxygenFill;
+    [SerializeField] private TMP_Text oxygenRemaining;
     private string currentText;
     private OxygenSystem oxygenSystem;
 
@@ -119,11 +116,8 @@ public class PlayerUI : MonoBehaviour
 
         float percent = amount / 100f;
         
-        oxygenFill.fillAmount = percent;
-
-        Color c = percent > 0.6f ? ColorSafe
-                : percent > 0.25f ? ColorWarn
-                : ColorDanger;
-        oxygenFill.color = c;
+        oxygenFill.targetFillAmount = percent;
+        if (oxygenRemaining == null) return;
+        oxygenRemaining.text = $"Oxygen: {Mathf.RoundToInt(oxygenSystem.CurrentPercent)}%";
     }
 }

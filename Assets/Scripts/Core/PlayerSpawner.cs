@@ -12,6 +12,22 @@ public class PlayerSpawner : MonoBehaviour
     
     public GameObject CurrentPlayer { get; private set; }
 
+    public Vector3 SpawnPosition
+    {
+        get
+        {
+            return spawnPoint != null ? spawnPoint.position : transform.position;
+        }
+    }
+
+    public Quaternion SpawnRotation
+    {
+        get
+        {
+            return spawnPoint != null ? spawnPoint.rotation : transform.rotation;
+        }
+    }
+
     private void Start()
     {
         if (spawnOnStart && !_autoSpawnSuppressed) SpawnPlayer();
@@ -36,14 +52,10 @@ public class PlayerSpawner : MonoBehaviour
             return null;
         }
 
-        Transform point = spawnPoint != null
-            ? spawnPoint
-            : transform;
-
         CurrentPlayer = Instantiate(
             playerPrefab,
-            point.position,
-            point.rotation);
+            SpawnPosition,
+            SpawnRotation);
         
         PlayerSpawned?.Invoke(CurrentPlayer);
 

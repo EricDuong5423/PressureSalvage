@@ -77,6 +77,7 @@ public class Inventory : MonoBehaviour
         }
         Instance = this;
         EnsureSize(capacity);
+        OnChanged?.Invoke();
     }
 
     private void EnsureSize(int n)

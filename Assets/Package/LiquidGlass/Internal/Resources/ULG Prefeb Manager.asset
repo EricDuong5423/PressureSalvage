@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 32
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28a3cdc38b9ce7e4187ee64ee0d97a08, type: 3}
+  m_Name: ULG Prefeb Manager
+  m_EditorClassIdentifier: 
+  mergeEffectCanvas: {fileID: 8632663548532501863, guid: c8106a55f7dc6584fb6280e2d0b221b3,
+    type: 3}
+  mergeableGlass: {fileID: 6117874494255270428, guid: 0b1d7dfc8be91d24391a180bfe3dfa85,
+    type: 3}
+  singleGlass: {fileID: 8325030276534725544, guid: 054779b5839afdb4489314c85eb4a0d6,
+    type: 3}

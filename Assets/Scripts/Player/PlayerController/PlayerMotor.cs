@@ -16,6 +16,11 @@ public class PlayerMotor : MonoBehaviour
     public float jumpHeight = 3f;
     public float sprintSpeed = 5f;
     
+    public interface IEffec<TTarget>
+    {
+        
+    }
+    
     private Vector3 horizontalVelocity;
     void Awake()
     {

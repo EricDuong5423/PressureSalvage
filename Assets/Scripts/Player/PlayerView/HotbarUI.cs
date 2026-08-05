@@ -15,6 +15,7 @@ public class HotbarUI : MonoBehaviour
     }
     
     [SerializeField] private Cell[] cells;
+    [SerializeField] private TMP_Text weightText;
 
     private void OnEnable()
     {
@@ -30,6 +31,7 @@ public class HotbarUI : MonoBehaviour
     private void Refresh()
     {
         var inv = Inventory.Instance;
+        float totalWeight = 0;
         for (int i = 0; i < cells.Length; i++)
         {
             bool used = inv != null && i < inv.Capacity;
@@ -37,6 +39,10 @@ public class HotbarUI : MonoBehaviour
             if (!used) continue;
 
             var slot = inv.slots[i];
+            if (slot.data != null)
+            {
+                totalWeight += slot.data.weightKg;
+            }
             if (cells[i].icon)
             {
                 cells[i].icon.enabled = !slot.Empty;
@@ -45,5 +51,8 @@ public class HotbarUI : MonoBehaviour
             if (cells[i].highlight) cells[i].highlight.enabled = (i == inv.activeIndex);
             if (cells[i].label) cells[i].label.text = (i + 1).ToString();
         }
+
+        if (weightText == null) return;
+        weightText.text = $"Weight: {totalWeight} kg";
     }
 }

@@ -23,7 +23,7 @@ public class BubblesController : MonoBehaviour
 
     private void Update()
     {
-        if (UnderwaterEnvironment.Instance == null)
+        if (UnderwaterEnvironment.Instance.Settings.displayName.Equals("SUBMARINE"))
         {
             _emission.rateOverTime = 0;
             return;

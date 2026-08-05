@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: Shallow
   m_EditorClassIdentifier: Assembly-CSharp::WaterSettings
   displayName: SHALLOW WATER
-  walkSpeed: 2
-  sprintSpeed: 4
+  walkSpeed: 4
+  sprintSpeed: 6
   acceleration: 8
   gravity: -8
   objectDrag: 3
   objectBuoyancy: 2
+  usingFogs: 1
+  fogDensity: 0.03
+  fogColor: {r: 0.4117647, g: 0.8862745, b: 1, a: 1}

@@ -9,7 +9,10 @@ public class MapData : ScriptableObject
     public Sprite ReviewImage;
     public Vector2 mapPosition;
     [TextArea] public string Description;
+    
+    [Header("Content")]
     public LootProfile LootProfile;
+    public EnemySpawnProfile EnemySpawnProfile;
 
     [Header("Unlock")] 
     public bool UnlockedByDefault;

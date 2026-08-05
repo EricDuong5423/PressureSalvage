@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e843d8a813b2248af2479d6fd1c075, type: 3}
+  m_Name: ShallowWater
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnProfile
+  baseEnemyCount: 3
+  extraEnemiesPerDay: 1
+  maximumEnemyCount: 20
+  navMeshAreaMask: -1
+  minimumDistanceFromPlayerSpawn: 12
+  minimumDistanceBetweenEnemies: 5
+  placementAttemptsPerEnemy: 24
+  enemies:
+  - id: 1
+    prefab: {fileID: 7903781094175352968, guid: 5a3df97c56f53cf4191e8c2c4c553fa8, type: 3}
+    firstDay: 1
+    lastDay: 10
+    guaranteedCount: 1
+    spawnWeight: 50
+    weightGrowthPerDay: 3
+    maximumAlive: 10
+    prewarmCount: 5
+    poolMaximumSize: 10
+  - id: 2
+    prefab: {fileID: 5696026668032584481, guid: 4a80c53dcf3f0554398bc014760df824, type: 3}
+    firstDay: 2
+    lastDay: 10
+    guaranteedCount: 1
+    spawnWeight: 30
+    weightGrowthPerDay: 2
+    maximumAlive: 10
+    prewarmCount: 5
+    poolMaximumSize: 10

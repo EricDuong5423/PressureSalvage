@@ -22,8 +22,6 @@ public class DeathSceneUI : MonoBehaviour
     
     [Header("Timing")]
     [SerializeField] private float fadeInDuration = 0.7f;
-    [SerializeField] private float beforeFinalDelay = 0.8f;
-    [SerializeField] private float finalFadeDuration = 0.5f;
     [SerializeField] private float finalHoldDuration = 2.5f;
     [SerializeField] private float reportHoldDuration = 0.8f;
     [SerializeField] private float reportFadeOutDuration = 0.5f;

@@ -1,0 +1,24 @@
+Third-Party Notices
+
+This asset includes components that are licensed under the CC0 1.0 Universal (Public Domain Dedication) license. 
+This means that the content is free to use without any restrictions, and you do not need to include attribution, although it is appreciated.
+
+Components included in this package:
+
+1. ProceduralUIShapes - A shader that renders rounded corner rectangles for UI.
+   - License: CC0 1.0 Universal
+   - Source: https://bitbucket.org/laitch/proceduraluishapes/src/master/
+
+2. UIBlurRenderPassFeature - Blur effect for Unity UI.
+   - License: MIT License
+   - Source: https://github.com/daniel-ilett/shaders-gaussian-blur
+   - Modification: I use Daniel Ilett's shaders-gaussian-blur project as a reference to create this effect.
+
+
+For further details, see the relevant licensing information at below: 
+CC0 1.0 Universal :  https://creativecommons.org/publicdomain/zero/1.0/
+MIT License:         https://github.com/daniel-ilett/shaders-gaussian-blur/blob/main/LICENSE
+
+Product Description Notice:
+This asset uses ProceduralUIShapes under CC0 1.0 Universal; see Third-Party Notices.txt file in the package for details.
+This asset uses UIBlurRenderPassFeature under MIT License; see Third-Party Notices.txt file in the package for details.

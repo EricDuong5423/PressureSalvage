@@ -107,7 +107,7 @@ MonoBehaviour:
   tooltipCanvas: {fileID: 4958551903081151453}
   canvasGroup: {fileID: 7800817995880223333}
   itemInfoText: {fileID: 7592845795665015288}
-  verticalGap: 0.15
+  verticalGap: 0.5
   followSharpness: 20
   rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &2921912505759782237
@@ -531,7 +531,7 @@ Transform:
   m_GameObject: {fileID: 6051934593434473592}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.73903, y: 98.44216, z: 17.06105}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -682,8 +682,10 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 64
-  hologramMaterial: {fileID: 2100000, guid: 7a9109925cc39cf4b8810f0cdf21572d, type: 2}
+  outlineMaterial: {fileID: 2100000, guid: b7b0059df07a60b4db0807ad5daa66cb, type: 2}
   worldItemTooltip: {fileID: 4035479069079838865}
+  outlineColorIntensity: 4
+  outlineScale: 1.05
 --- !u!114 &3004768286260645034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -696,10 +698,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740f4d85c85374533ae755d5a56820df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OxygenSystem
-  maxOxygen: 100
+  maxOxygen: 1000
   baseDrainRate: 1
-  sprintDrainBonus: 1.5
-  weightDrainPerKg: 0.3
+  sprintDrainBonus: 1.25
+  weightDrainPerKg: 0.15
   oxygenPerTier: 25
   panicThreshHold: 0.2
   panicMultiplier: 1.5
@@ -738,7 +740,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PanicEffect
   panicVolume: {fileID: 394214598256296206}
   transitionSpeed: 2
-  minBeatInterval: 0.35
+  minBeatInterval: 0.15
   maxBeatInterval: 1.1
 --- !u!114 &4350838990553369969
 MonoBehaviour:

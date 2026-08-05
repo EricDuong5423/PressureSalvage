@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UnderwaterEnvironment : MonoBehaviour
@@ -14,5 +15,12 @@ public class UnderwaterEnvironment : MonoBehaviour
             return;
         }
         Instance = this;
+    }
+
+    private void Start()
+    {
+        RenderSettings.fog = settings.usingFogs;
+        RenderSettings.fogDensity = settings.fogDensity;
+        RenderSettings.fogColor = settings.fogColor;
     }
 }

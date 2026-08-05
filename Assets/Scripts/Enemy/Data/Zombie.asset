@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ee1daa8bb621432eb563631ad4b603c, type: 3}
   m_Name: Zombie
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
-  enemyName: Zombie
+  enemyName: NormalZombie
   maxHealth: 100
   walkSpeed: 2
   runSpeed: 5

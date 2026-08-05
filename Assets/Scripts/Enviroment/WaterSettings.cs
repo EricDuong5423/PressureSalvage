@@ -13,4 +13,8 @@ public class WaterSettings : ScriptableObject
     [Header("Item")]
     public float objectDrag = 3f;
     public float objectBuoyancy = 7f;
+    [Header("Fogs")] 
+    public bool usingFogs = true;
+    public float fogDensity = 0.15f;
+    public Color fogColor = new Color(1f, 1f, 1f, 1f);
 }

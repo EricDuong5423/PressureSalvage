@@ -1,12 +1,20 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
+
+public enum EnemyMovementProgress
+{
+    Running,
+    Succeeded,
+    Failed
+}
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(EnemyAgentContext))]
 [RequireComponent(typeof(EnemyAnimationController))]
 public class EnemyMovementController : MonoBehaviour
 {
+    [SerializeField] private float randomRadius = 15f;
+    [SerializeField] private float searchRange = 5f;
     private NavMeshAgent agent;
     private EnemyAgentContext context;
     private EnemyAnimationController  animationController;
@@ -41,6 +49,101 @@ public class EnemyMovementController : MonoBehaviour
         
         return accepted;
     }
+    
+    public bool TryStartPatrol()
+    {
+        if (!agent.enabled
+            || !agent.isOnNavMesh
+            || context.Stats == null)
+        {
+            Stop();
+            return false;
+        }
+
+        if (!TryGetRandomPatrolPosition(out Vector3 destination))
+        {
+            Stop();
+            return false;
+        }
+
+        agent.speed = context.Stats.walkSpeed;
+        agent.angularSpeed = context.Stats.angularSpeed;
+        agent.stoppingDistance = 0.2f;
+        
+        agent.ResetPath();
+        agent.isStopped = false;
+        
+        bool accepted = agent.SetDestination(destination);
+        
+        animationController.SetMoving(accepted);
+        
+        return accepted;
+    }
+
+    public EnemyMovementProgress GetMoveProgress()
+    {
+        if (!agent.enabled ||
+            !agent.isOnNavMesh)
+        {
+            return EnemyMovementProgress.Failed;
+        }
+
+        if (agent.pathPending)
+            return EnemyMovementProgress.Running;
+        
+        float arrivalDistance = agent.stoppingDistance + 0.15f;
+        
+        bool reachedDestination = agent.remainingDistance <= arrivalDistance && (!agent.hasPath || agent.velocity.sqrMagnitude <= 0.01f);
+
+        if (reachedDestination)
+            return EnemyMovementProgress.Succeeded;
+        
+        if (agent.pathStatus == NavMeshPathStatus.PathInvalid ||
+            agent.pathStatus == NavMeshPathStatus.PathPartial)
+        {
+            return EnemyMovementProgress.Failed;
+        }
+
+        return EnemyMovementProgress.Running;
+    }
+
+    private bool TryGetRandomPatrolPosition(out Vector3 position)
+    {
+        position = transform.position;
+
+        float radius = Mathf.Max(1f, context.Stats.wanderRadius);
+
+        const int attempts = 8;
+
+        const float minimumDistance = 2f;
+
+        for (int i = 0; i < attempts; i++)
+        {
+            Vector2 offset = Random.insideUnitCircle * radius;
+
+            if (offset.sqrMagnitude < minimumDistance * minimumDistance)
+            {
+                continue;
+            }
+            
+            Vector3 candidate = transform.position + new Vector3(offset.x, 0, offset.y);
+
+            if (!NavMesh.SamplePosition(candidate, out NavMeshHit hit, searchRange, agent.areaMask))
+            {
+                continue;
+            }
+
+            if ((hit.position - position).sqrMagnitude < minimumDistance * minimumDistance)
+            {
+                continue;
+            }
+            
+            position = hit.position;
+            return true;
+        }
+
+        return false;
+    }
 
     public void Stop()
     {
@@ -49,6 +152,7 @@ public class EnemyMovementController : MonoBehaviour
             agent.isOnNavMesh)
         {
             agent.isStopped = true;
+            agent.ResetPath();
         }
         
         animationController.SetMoving(false);
@@ -71,4 +175,23 @@ public class EnemyMovementController : MonoBehaviour
         
         transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, context.Stats.angularSpeed * Time.deltaTime);
     }
+
+    #region For ObjectPooling
+
+    public void ResetState()
+    {
+        if (agent == null) return;
+        if (!agent.enabled)
+            agent.enabled = true;
+
+        if (agent.isOnNavMesh)
+        {
+            agent.isStopped = true;
+            agent.ResetPath();
+        }
+        
+        animationController.SetMoving(false);
+    }
+
+    #endregion
 }

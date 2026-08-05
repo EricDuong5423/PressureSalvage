@@ -19,3 +19,6 @@ MonoBehaviour:
   gravity: -3
   objectDrag: 3
   objectBuoyancy: 7
+  usingFogs: 1
+  fogDensity: 0.08
+  fogColor: {r: 0.7176471, g: 0.5568628, b: 0.36078432, a: 1}
