@@ -211,7 +211,7 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "b173295d-84ab-436c-a008-ffb30d00584d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -220,7 +220,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "b2a28d6e-f221-4ee1-8a9f-2bd4dd6e1a8d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -284,6 +284,15 @@
                     "type": "PassThrough",
                     "id": "a980a3c8-373d-4ef4-a111-ce2023ceec0b",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "7c5c222e-e11e-4654-bcef-c82890e565d1",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -705,6 +714,17 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fab46fab-02c5-4b65-8c40-cb6a44c55f08",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

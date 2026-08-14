@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 916b528ee16f2644392081d3d267acf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
-  capacity: 1
+  capacity: 3
 --- !u!1 &4311990678097195440
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLoadout
   defaultTankTier: 0
-  defaultSlotCount: 1
+  defaultSlotCount: 3
   ownedGear: []
 --- !u!1 &4854774908483184519
 GameObject:

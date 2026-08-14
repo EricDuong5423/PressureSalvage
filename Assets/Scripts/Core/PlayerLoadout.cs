@@ -56,5 +56,8 @@ public class PlayerLoadout : MonoBehaviour
             return;
         }
         Instance = this;
+        slotCount = defaultSlotCount;
+        oxygenTankTier = defaultTankTier;
+        OnChanged?.Invoke();
     }
 }

@@ -1329,6 +1329,7 @@ GameObject:
   - component: {fileID: 8017966368231774420}
   - component: {fileID: 1341210398328404811}
   - component: {fileID: 1343553116998047113}
+  - component: {fileID: 1004469040998204432}
   m_Layer: 6
   m_Name: Camera
   m_TagString: Untagged
@@ -1433,14 +1434,14 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
   m_ClearDepth: 1
   m_AllowXRRendering: 1
-  m_AllowHDROutput: 1
+  m_AllowHDROutput: 0
   m_UseScreenCoordOverride: 0
   m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
@@ -1454,6 +1455,22 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1004469040998204432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156754255408714240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73ff7ab16c1510046a45cb7705921535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  shakeDuration: 0.5
+  strength: {x: 10, y: 2, z: 5}
+  vibrato: 7
+  randomness: 90
 --- !u!1 &1247052006169916562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1864,7 +1881,8 @@ MonoBehaviour:
   cageDescent: {fileID: 3767621569886712931}
   eyeOpening: {fileID: 0}
   cutsceneCamera: {fileID: 8017966368231774420}
-  cutsceneAudioListener: {fileID: 0}
+  cameraShake: {fileID: 1004469040998204432}
+  cutsceneAudioListener: {fileID: 1341210398328404811}
   hudCanvasGroup: {fileID: 0}
   beforeDescentDelay: 0.4
   landingHold: 0.6
@@ -12567,9 +12585,9 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 15
+  m_Intensity: 10
   m_Range: 10
-  m_SpotAngle: 40
+  m_SpotAngle: 56.431824
   m_InnerSpotAngle: 30
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
@@ -12606,7 +12624,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1

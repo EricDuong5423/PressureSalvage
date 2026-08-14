@@ -12,6 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6e12c83452411b43b3415a6938a652d, type: 3}
   m_Name: Deep
   m_EditorClassIdentifier: Assembly-CSharp::LootProfile
-  items: []
+  items:
+  - prefab: {fileID: 7437992070529640437, guid: 6202d46815315b846807b88e4f88420d, type: 3}
+    weight: 20
+    minDay: 0
+  - prefab: {fileID: 8924992914502353242, guid: 498767a649c06fc42a48e3475dd28138, type: 3}
+    weight: 80
+    minDay: 0
+  - prefab: {fileID: 9212551613207724495, guid: 4caa159acaa403f489bb76e282f8e82c, type: 3}
+    weight: 80
+    minDay: 0
+  - prefab: {fileID: 7865324225235678618, guid: cb090311f14d4fc4285a79c45baa015d, type: 3}
+    weight: 60
+    minDay: 0
+  - prefab: {fileID: 9209253121545284591, guid: a1c41c6b4c396ad41a7d628d5c45ad98, type: 3}
+    weight: 20
+    minDay: 0
+  - prefab: {fileID: 8714073067484480442, guid: 1ba2cf334b10b3a4bb88b8afe9dd623b, type: 3}
+    weight: 20
+    minDay: 0
+  - prefab: {fileID: 8181568102883559795, guid: b835e5506a8ac9642986487836385df1, type: 3}
+    weight: 60
+    minDay: 0
+  - prefab: {fileID: 3237878203887307361, guid: 7dcb90d83fe446a4782c43dcbb51fe70, type: 3}
+    weight: 80
+    minDay: 0
+  - prefab: {fileID: 483153822900372356, guid: 67880a979ddaf5948a86529f8379a7bc, type: 3}
+    weight: 20
+    minDay: 0
+  - prefab: {fileID: 4398959039720393306, guid: bb7466179efe8c546a81ce190134f17a, type: 3}
+    weight: 80
+    minDay: 0
   baseCount: 12
-  extraPerDay: 2
+  extraPerDay: 3

@@ -14,6 +14,7 @@ public partial class EnemyMeleeAttackAction : Action
     private EnemyAgentContext context;
     private EnemyVisionSensor vision;
     private EnemyMovementController movement;
+    private EnemySwimmingController swimming;
     private EnemyMeleeCombat combat;
 
     protected override Status OnStart()
@@ -23,11 +24,12 @@ public partial class EnemyMeleeAttackAction : Action
         context = Agent.Value.GetComponent<EnemyAgentContext>();
         vision = Agent.Value.GetComponent<EnemyVisionSensor>();
         movement = Agent.Value.GetComponent<EnemyMovementController>();
+        swimming = Agent.Value.GetComponent<EnemySwimmingController>();
         combat = Agent.Value.GetComponent<EnemyMeleeCombat>();
         
         if (context == null ||
             vision == null ||
-            movement == null ||
+            (movement == null && swimming == null) ||
             combat == null)
         {
             return Status.Failure;
@@ -50,8 +52,8 @@ public partial class EnemyMeleeAttackAction : Action
             return Status.Failure;
         }
 
-        movement.TryChase(Target.Value);
-        movement.FaceTarget(Target.Value);
+        movement?.Stop();
+        swimming?.Stop();
 
         combat.TryAttack(Target.Value);
         

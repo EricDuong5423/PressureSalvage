@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665136218edba430896e4f68d2a5e434, type: 3}
+  m_Name: Smiley
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: Smiley
+  rank: 5
+  icon: {fileID: 0}
+  minValue: 1000
+  maxValue: 1500
+  weightKg: 1
+  canBreak: 0
+  isQuest: 0
+  worldPrefab: {fileID: 8181568102883559795, guid: b835e5506a8ac9642986487836385df1, type: 3}

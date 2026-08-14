@@ -19,6 +19,7 @@ MonoBehaviour:
   mapPosition: {x: 50, y: 50}
   Description: 
   LootProfile: {fileID: 11400000, guid: bccb24a0dae823b409a16410dd103818, type: 2}
+  EnemySpawnProfile: {fileID: 11400000, guid: 9fe0b55ff73d4f14c98526162f8affdd, type: 2}
   UnlockedByDefault: 0
   RequiredDay: 4
   UnlockCost: 500

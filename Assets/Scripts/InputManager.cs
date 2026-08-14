@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     private PlayerInput.OnFootActions onFoot;
     public PlayerInput.OnFootActions OnFoot => onFoot;
     public bool ControlEnabled = true;
+    public bool isTrap = false;
 
     private PlayerLook look;
     private PlayerMotor motor;
@@ -41,7 +42,7 @@ public class InputManager : MonoBehaviour
     
     private void Update()
     {
-        if (!ControlEnabled || motor == null)
+        if (!ControlEnabled || motor == null || isTrap)
             return;
 
         motor.ProcessMove(

@@ -17,8 +17,8 @@ public class ShopOfferButton : MonoBehaviour
         owner = ui;
         if (iconImage != null) iconImage.sprite = o.icon;
         if (nameText != null) nameText.text = o.displayName;
-        if (costText != null) costText.text = $"{o.cost}₡";
-        if (descText != null) descText.text = o.description;
+        if (costText != null) costText.text = $"Cost: {o.cost}₡";
+        if (descText != null) descText.text = $"Description: {o.description}";
         if (buyButton != null)
         {
             buyButton.onClick.RemoveAllListeners();

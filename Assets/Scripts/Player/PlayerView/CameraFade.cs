@@ -15,14 +15,23 @@ public class CameraFade : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        if(fadeVolume != null) fadeVolume.profile.TryGet(out _color);
+
+        if (fadeVolume != null)
+        {
+            fadeVolume.profile.TryGet(out _color);
+            
+            _color?.colorFilter.Override(Color.black);
+        }
+
         SetFade(1f);
     }
 
     public void SetFade(float t)
     {
         _fade = Mathf.Clamp01(t);
-        if (_color != null) _color.colorFilter.Override(Color.Lerp(Color.white, Color.black, _fade));
+
+        if (fadeVolume != null)
+            fadeVolume.weight = _fade;
     }
 
     public Tween FadeIn(float dur = 1) => DOTween.To(() => _fade, SetFade, 0f, dur).SetUpdate(true);

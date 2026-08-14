@@ -15,6 +15,9 @@ public sealed class MapEnemySpawnDirector : MonoBehaviour
 
     [SerializeField, Min(1)]
     private int editorFallbackDay = 1;
+    
+    [Header("Fixed spawn zones")]
+    [SerializeField] private EnemySpawnZone[] spawnZones;
 
     private readonly
         Dictionary<EnemySpawnEntry, EnemySpawner>
@@ -75,6 +78,63 @@ public sealed class MapEnemySpawnDirector : MonoBehaviour
         spawnStarted = true;
 
         SpawnInitialPopulation();
+    }
+    
+    private bool TryFindSpawnPosition(
+        NavMeshRandomPointProvider pointProvider,
+        Vector3? protectedPosition,
+        out Vector3 position)
+    {
+        position = default;
+
+        if (spawnZones == null || spawnZones.Length == 0)
+            return false;
+
+        for (int attempt = 0;
+             attempt < profile.PlacementAttemptsPerEnemy;
+             attempt++)
+        {
+            EnemySpawnZone zone =
+                spawnZones[Random.Range(0, spawnZones.Length)];
+
+            if (zone == null ||
+                !zone.isActiveAndEnabled ||
+                !zone.TryGetRandomNavMeshPoint(
+                    profile.NavMeshAreaMask,
+                    out Vector3 candidate))
+            {
+                continue;
+            }
+
+            if (protectedPosition.HasValue &&
+                Vector3.Distance(
+                    candidate,
+                    protectedPosition.Value) <
+                profile.MinimumDistanceFromPlayerSpawn)
+            {
+                continue;
+            }
+
+            bool tooCloseToEnemy = false;
+
+            foreach (Vector3 occupied in occupiedPositions)
+            {
+                if (Vector3.Distance(candidate, occupied) <
+                    profile.MinimumDistanceBetweenEnemies)
+                {
+                    tooCloseToEnemy = true;
+                    break;
+                }
+            }
+
+            if (tooCloseToEnemy)
+                continue;
+
+            position = candidate;
+            return true;
+        }
+
+        return false;
     }
 
     private void SpawnInitialPopulation()
@@ -149,14 +209,10 @@ public sealed class MapEnemySpawnDirector : MonoBehaviour
 
             for (int i = 0; i < count; i++)
             {
-                bool found =
-                    pointProvider.TryFindPosition(
-                        protectedPosition,
-                        occupiedPositions,
-                        profile.MinimumDistanceFromPlayerSpawn,
-                        profile.MinimumDistanceBetweenEnemies,
-                        profile.PlacementAttemptsPerEnemy,
-                        out Vector3 position);
+                bool found = TryFindSpawnPosition(
+                    pointProvider,
+                    protectedPosition,
+                    out Vector3 position);
 
                 if (!found)
                 {

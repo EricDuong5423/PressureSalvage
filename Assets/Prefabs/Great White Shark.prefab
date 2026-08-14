@@ -498,8 +498,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4def4e863fa86e2468c4afd0385c093c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySwimmingController
-  verticalPatrolRadius: 100
-  minimumPatrolDistance: 40
+  verticalPatrolRadius: 10
+  minimumPatrolDistance: 10
   maxAttempts: 10
   arrivalDistance: 0.25
   obstacleMask:
@@ -520,9 +520,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bf711afac0c0a43a426a00802ef638, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMeleeCombat
-  onHit:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &5696026668032584481
 MonoBehaviour:
   m_ObjectHideFlags: 0

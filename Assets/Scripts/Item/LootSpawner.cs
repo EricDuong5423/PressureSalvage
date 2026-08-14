@@ -17,6 +17,7 @@ public class LootSpawner : MonoBehaviour
     [SerializeField] private SpawnShape spawnShape = SpawnShape.Circle;
     [SerializeField] private Vector2 boxSize = new Vector2(0f, 0f);
     [SerializeField] private Vector3 spawningOffset = new Vector3(0f, 0f, 0f);
+    [SerializeField] private TrapSpawner _trapSpawner;
 
     private void OnDrawGizmos()
     {
@@ -85,6 +86,11 @@ public class LootSpawner : MonoBehaviour
             if (carryItem == null) continue;
             
             carryItem.SpawningItem();
+            
+            _trapSpawner?.TrySpawnTrapForLoot(
+                spawnPoint,
+                carryItem.Value,
+                day);
             
             QuotaToday -= carryItem.Value;
         }

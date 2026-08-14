@@ -11,13 +11,13 @@ public sealed class EnemyHitEvent : UnityEvent<GameObject, float>
 [RequireComponent(typeof(EnemyAnimationController))]
 public sealed class EnemyMeleeCombat : MonoBehaviour, IEnemyAttack
 {
-   [SerializeField] private EnemyHitEvent onHit = new EnemyHitEvent();
    private EnemyAgentContext context;
    private EnemyAnimationController animationController;
 
    private GameObject lockedTarget;
    private float nextAttackTime;
    private bool impactApplied;
+   private OxygenSystem oxygenSystem;
    private void Awake()
    {
       context = GetComponent<EnemyAgentContext>();
@@ -40,6 +40,9 @@ public sealed class EnemyMeleeCombat : MonoBehaviour, IEnemyAttack
       nextAttackTime = Time.time + context.Stats.attackCoolDown;
       
       animationController.PlayAttack();
+      
+      oxygenSystem = target.GetComponent<OxygenSystem>();
+      if (oxygenSystem == null) return false;
 
       return true;
    }
@@ -54,7 +57,7 @@ public sealed class EnemyMeleeCombat : MonoBehaviour, IEnemyAttack
       }
 
       impactApplied = true;
-      onHit.Invoke(lockedTarget, context.Stats.damage);
+      oxygenSystem.DecreaseOxygen(context.Stats.damage);
    }
 
    public void ResetState()

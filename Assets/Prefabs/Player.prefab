@@ -225,14 +225,14 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 3
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -313,7 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
   m_IsGlobal: 1
-  priority: 10
+  priority: -1
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: 73dbba9747f3c6245bd052e56b8c0e51, type: 2}
@@ -478,7 +478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
   m_IsGlobal: 1
-  priority: 50
+  priority: -1
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: d108648e566b45642bee6efced2db5aa, type: 2}
@@ -515,6 +515,7 @@ GameObject:
   - component: {fileID: 271359106117142129}
   - component: {fileID: 7424955665178407937}
   - component: {fileID: 4350838990553369969}
+  - component: {fileID: 5246766902018826662}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -634,6 +635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputManager
   ControlEnabled: 1
+  isTrap: 0
 --- !u!114 &4869137336818405001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,7 +648,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c258cd637efd4a04cb713e3fd33fe422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMotor
-  speed: 5
   walkSpeed: 3
   gravity: -9.8
   jumpHeight: 0.5
@@ -758,6 +759,18 @@ MonoBehaviour:
   dropOffset: {x: 0, y: 0, z: 1.2}
   useAction: {fileID: -484092367568487030, guid: b900f41fed88f584c95a530935d63efb, type: 3}
   dropAction: {fileID: -7248926767502741925, guid: b900f41fed88f584c95a530935d63efb, type: 3}
+--- !u!114 &5246766902018826662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6051934593434473592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47dea060744c954c822a24ebd383ba0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEquipment
 --- !u!1 &7732651850416067989
 GameObject:
   m_ObjectHideFlags: 0

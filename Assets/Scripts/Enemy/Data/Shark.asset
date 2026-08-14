@@ -19,8 +19,8 @@ MonoBehaviour:
   angularSpeed: 120
   viewRadius: 50
   viewAngle: 360
-  attackRange: 1
-  attackCoolDown: 1.5
+  attackRange: 4
+  attackCoolDown: 3
   damage: 1000
   wanderRadius: 10
   wanderWaitTime: 3

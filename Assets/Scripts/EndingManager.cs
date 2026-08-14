@@ -22,14 +22,14 @@ public class EndingManager : MonoBehaviour
     public void ChangeTrapEndingScene()
     {
         GameProgressionManager.Instance.ResetNewRun();
-        if (trappedEndingScene != null) return;
+        if (trappedEndingScene == null) return;
         SceneManager.LoadScene(trappedEndingScene);
     }
 
     public void ChangeEscapeEndingScene()
     {
         GameProgressionManager.Instance.ResetNewRun();
-        if (escapeEndingScene != null) return;
+        if (escapeEndingScene == null) return;
         SceneManager.LoadScene(escapeEndingScene);
     }
 }

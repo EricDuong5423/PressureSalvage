@@ -69,6 +69,15 @@ public class GameProgressionManager : MonoBehaviour
 
         OnStateChanged?.Invoke();
     }
+    
+    public void DebugUnlockMap(MapData map)
+    {
+        if (map == null)
+            return;
+
+        unlockedMaps.Add(map.Id);
+        OnStateChanged?.Invoke();
+    }
 
     private static int BaseQuota(int day)
     {
@@ -176,6 +185,12 @@ public class GameProgressionManager : MonoBehaviour
 
         Credits += currentSurplus - previousSurplus;
 
+        OnStateChanged?.Invoke();
+    }
+
+    public void AddCredits(int value)
+    {
+        Credits += value;
         OnStateChanged?.Invoke();
     }
 

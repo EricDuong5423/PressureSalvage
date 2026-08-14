@@ -2,45 +2,41 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
-    
+
     private CharacterController controller;
+    public CharacterController Controller => controller;
     private Vector3 playerVelocity;
     private bool isGrounded;
     private bool isSprinting = false;
 
     public bool IsSprinting => isSprinting;
-
-    public float speed = 3f;
+    
     public float walkSpeed = 3f;
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
     public float sprintSpeed = 5f;
     
-    public interface IEffec<TTarget>
-    {
-        
-    }
-    
     private Vector3 horizontalVelocity;
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+        var s = UnderwaterEnvironment.Instance?.Settings;
+        walkSpeed = s.walkSpeed;
+        gravity = s.gravity;
+        sprintSpeed = s.sprintSpeed;
     }
 
     public void ProcessMove(Vector2 input)
     {
         var s = UnderwaterEnvironment.Instance?.Settings;
         float accel  = s ? s.acceleration : 3f;
-        float g      = s ? s.gravity : gravity;
-        float walk   = s ? s.walkSpeed : walkSpeed;
-        float sprint = s ? s.sprintSpeed : sprintSpeed;
-        float curSpeed = isSprinting ? sprint : walk;
+        float curSpeed = isSprinting ? sprintSpeed : walkSpeed;
 
         Vector3 dir = transform.TransformDirection(new Vector3(input.x, 0, input.y));
         horizontalVelocity = Vector3.Lerp(horizontalVelocity, dir * curSpeed, accel * Time.deltaTime);
         controller.Move(horizontalVelocity * Time.deltaTime);
 
-        playerVelocity.y += g * Time.deltaTime;
+        playerVelocity.y += gravity * Time.deltaTime;
         if (isGrounded && playerVelocity.y < 0) playerVelocity.y = -2f;
         controller.Move(playerVelocity * Time.deltaTime);
     }

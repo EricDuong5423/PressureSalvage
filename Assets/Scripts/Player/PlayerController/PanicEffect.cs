@@ -74,6 +74,9 @@ public class PanicEffect : MonoBehaviour
         //Stage 3: Panic (20% → 0%)
         float panicT = Mathf.InverseLerp(20f, 0f, currentOxy);
         bool isPanic = panicT > 0f;
+        
+        float effectWeight = Mathf.Max(colorT, warnT, panicT);
+        panicVolume.weight = effectWeight;
 
         if (isPanic)
         {

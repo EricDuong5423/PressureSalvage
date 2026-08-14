@@ -23,7 +23,7 @@ public class OxygenSystem : MonoBehaviour
     
     private float currentOxygen;
     private bool isDead;
-    private List<ActiveDebuff> activeDebuffs = new();
+    public List<ActiveDebuff> activeDebuffs = new();
 
     private PlayerMotor motor;
     private PlayerInteract interact;
@@ -32,7 +32,21 @@ public class OxygenSystem : MonoBehaviour
     
     public float PanicThreshHoldRatio => panicThreshHold;
 
-    private struct ActiveDebuff
+    public void DecreaseOxygen(float amount)
+    {
+        currentOxygen -= amount;
+        
+        float percent = currentOxygen / maxOxygen * 100f;
+        OnOxygenChanged?.Invoke(percent);
+        
+        if (currentOxygen <= 0f && !isDead)
+        {
+            isDead = true;
+            OnOxygenDepleted.Invoke();
+        }
+    }
+
+    public class ActiveDebuff
     {
         public float drainPerSec;
         public float duration;

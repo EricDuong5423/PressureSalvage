@@ -20,5 +20,5 @@ MonoBehaviour:
   objectDrag: 3
   objectBuoyancy: 9
   usingFogs: 1
-  fogDensity: 0.15
+  fogDensity: 0.04
   fogColor: {r: 0, g: 0, b: 0, a: 1}
